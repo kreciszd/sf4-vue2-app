@@ -1,0 +1,2 @@
+* * * * * cd /opt &&  php ./bin/console documents:delete --env=dev
+# Mandatory blank line
