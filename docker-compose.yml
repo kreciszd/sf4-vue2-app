@@ -10,21 +10,19 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  app:
+  backend:
     image: thecodingmachine/php:7.2-v2-apache-node10
     labels:
       - traefik.enable=true
       - traefik.backend=app
       - traefik.frontend.rule=Host:app.beer
+    env_file:
+      - ./backend/.env
     environment:
       APACHE_DOCUMENT_ROOT: public/
-      PHP_EXTENSION_XDEBUG: 1
-      PHP_MEMORY_LIMIT: 1G
-      APP_ENV: dev
-      APP_SECRET: 8d2a5c935d8ef1c0e2b751147382bc75
       DATABASE_URL: mysql://db_user:db_password@mysql:3306/db_name
     volumes:
-      - ./:/var/www/html:rw
+      - ./backend:/var/www/html:rw
 
   mysql:
     image: mysql:5.7
@@ -48,6 +46,19 @@ services:
       PMA_USER: db_user
       PMA_PASSWORD: db_password
 
+  front:
+    build:
+      context: ./front
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    command: sh -c "npm install && npm run serve"
+    volumes:
+      - "./front:/app"
+    environment:
+      HOST: 0.0.0.0
+    depends_on:
+      - backend
 volumes:
 
   mysql_data:
