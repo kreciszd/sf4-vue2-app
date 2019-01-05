@@ -2,36 +2,33 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
+ * @ApiResource(
+ *     attributes={"order"={"name":"ASC"}, "pagination_enabled"=false},
+ *     itemOperations={"GET"},
+ *     collectionOperations={"GET"}
+ * )
  */
-class Country
+class Country implements NameFieldInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get","get-beer-all-data","get-brewer-all-data"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"get","get-beer-all-data","get-brewer-all-data"})
      */
     private $name;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Brewer", mappedBy="country")
-     */
-    private $brewers;
-
-    public function __construct()
-    {
-        $this->brewers = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -43,40 +40,9 @@ class Country
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): NameFieldInterface
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Brewer[]
-     */
-    public function getBrewers(): Collection
-    {
-        return $this->brewers;
-    }
-
-    public function addBrewer(Brewer $brewer): self
-    {
-        if (!$this->brewers->contains($brewer)) {
-            $this->brewers[] = $brewer;
-            $brewer->setCountry($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBrewer(Brewer $brewer): self
-    {
-        if ($this->brewers->contains($brewer)) {
-            $this->brewers->removeElement($brewer);
-            // set the owning side to null (unless already changed)
-            if ($brewer->getCountry() === $this) {
-                $brewer->setCountry(null);
-            }
-        }
 
         return $this;
     }

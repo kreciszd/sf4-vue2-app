@@ -33,13 +33,13 @@ class BeerRepository extends BaseRepository
 
         $type = $this->_em
             ->getRepository(Type::class)
-            ->findOneOrCreateByName($apiBeer->category);
+            ->findOneOrCreateByName($apiBeer->type);
 
         $beer = new Beer();
         $beer->setName($apiBeer->name);
         $beer->setSize($apiBeer->size);
         $beer->setPrice($apiBeer->price);
-        $beer->setPricePerLiter($apiBeer->price);
+        $beer->setPricePerLiter($this->calculatePricePerLiter($apiBeer->size, $apiBeer->price));
         $beer->setImageUrl($apiBeer->image_url);
         $beer->setAbv($apiBeer->abv);
         $beer->setOnSale($apiBeer->on_sale);
@@ -53,5 +53,15 @@ class BeerRepository extends BaseRepository
         if ($apiBeer->attributes !== 'N/A') $beer->setAttributes($apiBeer->style);
 
         return $beer;
+    }
+
+    private function calculatePricePerLiter(string $size, float $price) : float
+    {
+        preg_match_all('!\d+!', $size, $matches);
+        $amount = (float)$matches[0][0];
+        $quantity = (float)$matches[0][1];
+        $totalMl = $amount*$quantity;
+
+        return ($price*1000)/$totalMl;
     }
 }

@@ -2,47 +2,101 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BeerRepository")
+ * @ApiResource(
+ *     attributes={
+ *          "order"={"name":"ASC"},
+ *          "pagination_client_items_per_page"=true,
+ *          "maximum_items_per_page": 100
+ *     },
+ *     itemOperations={
+ *         "GET"={
+ *              "normalization_context"={
+ *                  "groups"={"get","get-beer-all-data"}
+ *              }
+ *          }
+ *      },
+ *     collectionOperations={
+ *         "GET"={
+ *              "normalization_context"={
+ *                  "groups"={"read","get-beer-all-data"}
+ *              }
+ *          }
+ *      },
+ *     normalizationContext={
+ *         "groups"={"read"}
+ *     }
+ * )
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+ *          "brewer":"exact",
+ *          "name":"partial",
+ *          "type.name":"partial",
+ *          "brewer.country.name":"partial"
+ *     }
+ * )
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={"price"}
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={"name","brewer","type","country","pricePerLiter","price","type.name","brewer.country.name"}
+ * )
  */
-class Beer
+class Beer implements NameFieldInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read","get-beer-all-data"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $size;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $pricePerLiter;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get"})
      */
     private $imageUrl;
 
     /**
      * @ORM\Column(type="decimal", precision=3, scale=1)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $abv;
 
@@ -58,6 +112,7 @@ class Beer
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $onSale;
 
@@ -74,16 +129,19 @@ class Beer
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Brewer", inversedBy="beers")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $brewer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="beers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Type")
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="beers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
+     * @Groups({"read", "get-beer-all-data"})
      */
     private $category;
 
@@ -97,7 +155,7 @@ class Beer
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): NameFieldInterface
     {
         $this->name = $name;
 

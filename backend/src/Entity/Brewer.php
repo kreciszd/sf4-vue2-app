@@ -2,29 +2,58 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BrewerRepository")
+ * @ApiResource(
+ *     attributes={
+ *          "order"={"name":"ASC"},
+ *          "pagination_client_items_per_page"=true,
+ *          "maximum_items_per_page": 100
+ *     },
+ *     itemOperations={
+ *         "GET"={
+ *              "normalization_context"={
+ *                  "groups"={"get","get-brewer-all-data"}
+ *              }
+ *          }
+ *      },
+ *     collectionOperations={
+ *         "GET"={
+ *              "normalization_context"={
+ *                  "groups"={"get","get-brewer-all-data"}
+ *              }
+ *          }
+ *      },
+ *     normalizationContext={
+ *         "groups"={"read"}
+ *     }
+ * )
  */
-class Brewer
+class Brewer implements NameFieldInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get","get-beer-all-data"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"get","get-beer-all-data"})
      */
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="brewers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country")
+     * @Groups({"get","get-beer-all-data", "get-brewer-all-data"})
      */
     private $country;
 
@@ -32,6 +61,11 @@ class Brewer
      * @ORM\OneToMany(targetEntity="App\Entity\Beer", mappedBy="brewer", orphanRemoval=true)
      */
     private $beers;
+
+    /**
+     * @Groups({"get","get-brewer-all-data"})
+     */
+    private $beersCount;
 
     public function __construct()
     {
@@ -48,7 +82,7 @@ class Brewer
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): NameFieldInterface
     {
         $this->name = $name;
 
@@ -96,5 +130,13 @@ class Brewer
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBeersCount()
+    {
+        return count($this->getBeers());
     }
 }

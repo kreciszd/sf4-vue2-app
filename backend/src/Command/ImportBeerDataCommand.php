@@ -33,6 +33,7 @@ class ImportBeerDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $io = new SymfonyStyle($input, $output);
         $client = new Client(['base_uri' => 'http://ontariobeerapi.ca']);
 
@@ -57,8 +58,14 @@ class ImportBeerDataCommand extends Command
                 }
             }
             $this->entityManager->flush();
-            $this->logger->info('Success with import');
+            $this->logger->notice('Success with import');
+            $this->logger->info('Added new beers:'. $i);
+
             $io->success('Success with import.');
+
+        } catch (\GuzzleHttp\Exception\ClientException $exception) {
+            $io->error($exception->getMessage());
+            $this->logger->error($exception->getMessage());
 
         } catch (\Exception $exception) {
             $io->error($exception->getMessage());

@@ -2,36 +2,33 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ApiResource(
+ *     attributes={"order"={"name":"ASC"}, "pagination_enabled"=false},
+ *     itemOperations={"GET"},
+ *     collectionOperations={"GET"}
+ * )
  */
-class Category
+class Category implements NameFieldInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get","get-beer-all-data",""})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"get","get-beer-all-data"})
      */
     private $name;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Beer", mappedBy="category")
-     */
-    private $beers;
-
-    public function __construct()
-    {
-        $this->beers = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -43,40 +40,9 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): NameFieldInterface
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Beer[]
-     */
-    public function getBeers(): Collection
-    {
-        return $this->beers;
-    }
-
-    public function addBeer(Beer $beer): self
-    {
-        if (!$this->beers->contains($beer)) {
-            $this->beers[] = $beer;
-            $beer->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBeer(Beer $beer): self
-    {
-        if ($this->beers->contains($beer)) {
-            $this->beers->removeElement($beer);
-            // set the owning side to null (unless already changed)
-            if ($beer->getCategory() === $this) {
-                $beer->setCategory(null);
-            }
-        }
 
         return $this;
     }

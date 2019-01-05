@@ -1,5 +1,11 @@
 monolog:
     handlers:
+        api_importer:
+          type: stream
+          path: "%kernel.logs_dir%/importer_%kernel.environment%.log"
+          level: debug
+          channels: [importer]
+          include_stacktraces: true
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
