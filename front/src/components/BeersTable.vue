@@ -11,7 +11,14 @@
         <v-flex xs3>
           <country-filter :refresh-records="refreshBeers" :search="search"/>
         </v-flex>
+        <v-flex xs3>
+          <brewer-filter :refresh-records="refreshBeers" :search="search"/>
+        </v-flex>
+        <v-flex xs3>
+          <type-filter :refresh-records="refreshBeers" :search="search"/>
+        </v-flex>
       </v-layout>
+        <price-filter :refresh-records="refreshBeers" :search="search"/>
       <v-data-table
         :headers="headers"
         :items="beers"
@@ -48,14 +55,20 @@
   import mixin from '../mixin';
   import CountryFilter from "./Filters/CountryFilter";
   import NameFilter from "./Filters/NameFilter";
+  import BrewerFilter from "./Filters/BrewerFilter";
+  import TypeFilter from "./Filters/TypeFilter";
+  import PriceFilter from "./Filters/PriceFilter";
 
   export default {
-    components: {NameFilter, CountryFilter},
+    components: {NameFilter, CountryFilter, BrewerFilter, TypeFilter,PriceFilter},
     mixins: [mixin],
     data: () => ({
       search: {
         name: '',
-        country: ''
+        country: '',
+        brewer: '',
+        priceFrom: '',
+        priceTo: '',
       },
       rowsPerPageItems: [5,10,25,100],
       totalBeers: 0,
@@ -63,6 +76,10 @@
       loading: true,
       pagination: {
         rowsPerPage: 10,
+        descending: false,
+        page: 1,
+        sortBy: 'name',
+        totalItems: 0,
       },
       beers: [],
       headers: [
@@ -82,7 +99,14 @@
         handler () {
           this.refreshBeers()
         },
-        // deep: false
+        deep: true
+      }
+    },
+    created() {
+      if(this.$route.query.brewer) {
+        this.search.brewer = Number(this.$route.query.brewer);
+      } else {
+        this.search.brewer = ''
       }
     },
     methods: {
@@ -94,7 +118,11 @@
         if(this.pagination.descending === false) {
           a = 'asc'
         }
-        let url = `api/beers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&order[${this.pagination.sortBy}]=${a}&name=${this.search.name}&brewer.country.name=${this.search.country}`
+        let url =
+          `api/beers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&order[${this.pagination.sortBy}]=${a}&name=${this.search.name}&brewer.country.id=${this.search.country}&price[gte]=${this.search.priceFrom}&price[lte]=${this.search.priceTo}`
+        if(this.search.brewer) {
+          url = `${url}&brewer=${this.search.brewer}`
+        }
         this.getBeersFromApi(url)
       },
       getBeersFromApi(url) {

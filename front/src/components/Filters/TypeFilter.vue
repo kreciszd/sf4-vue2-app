@@ -1,17 +1,17 @@
 <template>
   <v-card-title>
     <v-autocomplete
-      v-model="search.country"
-      :items="countries"
+      v-model="search.type"
+      :items="types"
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
-      label="Country"
+      label="Type"
       item-text="name"
       item-value="id"
       persistent-hint
       prepend-icon="mdi-city"
-      clearable="true"
+      type="number"
     >
       <v-slide-x-reverse-transition
         slot="append-outer"
@@ -23,7 +23,7 @@
 </template>
 <script>
   export default {
-    name: 'brewer-filter',
+    name: 'type-filter',
     props: {
       refreshRecords: {},
       search: {}
@@ -32,18 +32,18 @@
       return {
         isEditing: true,
         model: null,
-        countries: []
+        types: []
       }
     },
     mounted() {
-      this.getCountriesList();
+      this.getTypesList();
     },
     methods: {
-      getCountriesList() {
+      getTypesList() {
         this.$http
-          .get('api/countries')
+          .get('api/types')
           .then((response) => {
-            this.countries = response.data['hydra:member']
+            this.types = response.data['hydra:member']
           }).finally(()=>{
         })
       }

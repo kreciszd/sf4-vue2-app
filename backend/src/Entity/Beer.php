@@ -40,9 +40,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     SearchFilter::class,
  *     properties={
  *          "brewer":"exact",
+ *          "brewer.name":"exact",
  *          "name":"partial",
  *          "type.name":"partial",
- *          "brewer.country.name":"partial"
+ *          "brewer.country.id":"exact"
  *     }
  * )
  * @ApiFilter(
@@ -51,7 +52,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ApiFilter(
  *     OrderFilter::class,
- *     properties={"name","brewer.name","type","category.name","pricePerLitre","price","size","type.name","brewer.country.name","onSale"}
+ *     properties={"name","brewer.name","type.name","pricePerLitre","price","size","type.name","brewer.country.id","onSale"}
  * )
  */
 class Beer implements NameFieldInterface

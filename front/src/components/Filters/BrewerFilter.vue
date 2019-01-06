@@ -1,12 +1,12 @@
 <template>
   <v-card-title>
     <v-autocomplete
-      v-model="search.country"
-      :items="countries"
+      v-model="search.brewer"
+      :items="brewers"
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
-      label="Country"
+      label="Brewer"
       item-text="name"
       item-value="id"
       persistent-hint
@@ -32,18 +32,18 @@
       return {
         isEditing: true,
         model: null,
-        countries: []
+        brewers: []
       }
     },
     mounted() {
-      this.getCountriesList();
+      this.getBrewersList();
     },
     methods: {
-      getCountriesList() {
+      getBrewersList() {
         this.$http
-          .get('api/countries')
+          .get('api/brewers?itemsPerPage=1000')
           .then((response) => {
-            this.countries = response.data['hydra:member']
+            this.brewers = response.data['hydra:member']
           }).finally(()=>{
         })
       }

@@ -17,8 +17,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BrewerRepository")
  * @ApiResource(
  *     attributes={
+ *          "order"={"name":"ASC"},
  *          "pagination_client_items_per_page"=true,
- *          "maximum_items_per_page": 100
+ *          "maximum_items_per_page": 1000,
  *     },
  *     itemOperations={
  *         "GET"={
@@ -42,7 +43,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     SearchFilter::class,
  *     properties={
  *          "name":"partial",
- *          "country.name":"partial"
+ *          "country.id":"exact"
  *     }
  * )
  * @ApiFilter(

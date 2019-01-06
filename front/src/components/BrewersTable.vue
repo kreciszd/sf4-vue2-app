@@ -22,7 +22,8 @@
         class="elevation-1"
       >
         <template slot="items" slot-scope="props">
-          <td class="text-xs-left">{{ props.item.name }}</td>
+          <td class="text-xs-left">{{ props.item.id }}</td>
+          <td class="text-xs-left"><router-link :to="`/?brewer=${props.item.id}`">{{ props.item.name }}</router-link></td>
           <td class="text-xs-left">{{ props.item.beersCount }}</td>
           <td class="text-xs-left">{{ props.item.country.name }}</td>
         </template>
@@ -59,6 +60,7 @@
       },
       brewers: [],
       headers: [
+        { text: 'Id', value: 'id'},
         { text: 'Name', value: 'name'},
         { text: 'Number of beers', value: 'beersCount' },
         { text: 'Country', value: 'country.name' },
@@ -69,7 +71,7 @@
         handler () {
           this.refreshBewers()
         },
-        // deep: false
+        deep: true
       }
     },
     methods: {
@@ -78,11 +80,10 @@
         if(this.pagination.descending === true) direction = 'desc'
         if(this.pagination.descending === false) direction = 'asc'
 
-        let url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&order[${this.pagination.sortBy}]=${direction}&name=${this.search.name}&country.name=${this.search.country}`
+        let url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&order[${this.pagination.sortBy}]=${direction}&name=${this.search.name}&country.id=${this.search.country}`
         if(this.pagination.sortBy === 'beersCount') {
-          url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&${this.pagination.sortBy}=${direction}&name=${this.search.name}&country.name=${this.search.country}`
+          url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&${this.pagination.sortBy}=${direction}&name=${this.search.name}&country.id=${this.search.country}`
         }
-
         this.getBrewersFromApi(url)
       },
       getBrewersFromApi(url) {
