@@ -13,7 +13,7 @@ export default {
         });
       }
 
-      return getVars.page;
+      return Number(getVars.page);
     },
   }
 }

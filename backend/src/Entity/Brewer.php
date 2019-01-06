@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BrewerRepository")
  * @ApiResource(
  *     attributes={
- *          "order"={"name":"ASC"},
+ *          "order"={"id":"ASC"},
  *          "pagination_client_items_per_page"=true,
  *          "maximum_items_per_page": 1000,
  *     },
@@ -56,7 +56,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ApiFilter(
  *     OrderFilter::class,
- *     properties={"name","country.name"}
+ *     properties={"name","country.name", "id"}
  * )
  */
 class Brewer implements NameFieldInterface

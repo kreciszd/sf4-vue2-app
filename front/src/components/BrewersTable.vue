@@ -3,7 +3,8 @@
     xs12
     mb-5
   >
-    <v-card>
+    <alert-error :message="error.message" v-if="error.show"/>
+    <v-card v-else>
       <v-layout row wra>
       <v-flex xs3>
         <name-filter :refresh-records="refreshBewers" :search="search"/>
@@ -40,14 +41,19 @@
   import mixin from '../mixin';
   import CountryFilter from "./Filters/CountryFilter";
   import NameFilter from "./Filters/NameFilter";
+  import AlertError from "./AlertError";
 
   export default {
-    components: {CountryFilter, NameFilter},
+    components: {CountryFilter, NameFilter, AlertError},
     mixins: [mixin],
     data: () => ({
       search: {
         name: '',
         country: ''
+      },
+      error: {
+        message: '',
+        show: false
       },
       rowsPerPageItems: [5,10,25,100],
       totalBrewers: 0,
@@ -98,7 +104,12 @@
             } else {
               this.lastPage = 1;
             }
-          }).finally(()=>{
+          })
+          .catch(error => {
+            this.error.show = true
+            this.error.message = 'Error with server'
+          })
+          .finally(()=>{
             this.loading = false
           })
       },

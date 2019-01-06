@@ -9,7 +9,7 @@
           append-icon="keyboard_arrow_up"
           label="Price from"
           hide-details
-          clearable="true"
+          :clearable="true"
         ></v-text-field>
       </v-card-title>
     </v-flex>
@@ -21,7 +21,7 @@
           append-icon="keyboard_arrow_down"
           label="Price to"
           hide-details
-          clearable="true"
+          :clearable="true"
           type="number"
         ></v-text-field>
       </v-card-title>

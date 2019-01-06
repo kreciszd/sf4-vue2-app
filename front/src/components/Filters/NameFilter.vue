@@ -6,7 +6,7 @@
       append-icon="search"
       label="Beer name"
       hide-details
-      clearable="true"
+      :clearable="true"
     ></v-text-field>
   </v-card-title>
 </template>

@@ -11,7 +11,7 @@
       item-value="id"
       persistent-hint
       prepend-icon="mdi-city"
-      type="number"
+      :clearable="true"
     >
       <v-slide-x-reverse-transition
         slot="append-outer"

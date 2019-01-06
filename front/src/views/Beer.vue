@@ -5,6 +5,7 @@
       <v-card>
         <v-img
           :src="beer.imageUrl"
+          alt="ss"
           class="beer-image"
           contain
         ></v-img>
@@ -53,6 +54,7 @@
     data: () => ({
       beer: {
         onSale: false,
+        image: '',
         name: '',
         abv: '',
         price: '',
@@ -84,7 +86,7 @@
     components: {
       BeerInfo
     },
-    created() {
+    activated() {
       this.getBeer()
     },
     methods: {
