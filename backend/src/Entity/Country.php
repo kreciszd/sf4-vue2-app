@@ -30,6 +30,12 @@ class Country implements NameFieldInterface
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"get","get-beer-all-data","get-brewer-all-data"})
+     */
+    private $code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -43,6 +49,18 @@ class Country implements NameFieldInterface
     public function setName(string $name): NameFieldInterface
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

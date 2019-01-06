@@ -3,8 +3,9 @@
 namespace App\Command;
 
 use App\Entity\Beer;
+use App\Service\ExternalApiService;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
+use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,11 +18,13 @@ class ImportBeerDataCommand extends Command
 
     private $entityManager;
     private $logger;
+    private $externalApiService;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, ExternalApiService $externalApiService)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->externalApiService = $externalApiService;
 
         parent::__construct();
     }
@@ -31,45 +34,39 @@ class ImportBeerDataCommand extends Command
         $this->setDescription('Import information about beers from external API');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $io = new SymfonyStyle($input, $output);
-        $client = new Client(['base_uri' => 'http://ontariobeerapi.ca']);
+        $products = $this->externalApiService->importBeers();
 
-        try {
-            $products = $client->get('/products')->getBody()->getContents();
+        $batchSize = 20;
+        $i = 0;
+        foreach ($products as $apiBeer) {
+            $beer = $this->entityManager->getRepository(Beer::class)->findOneBy(['productId' => $apiBeer->product_id]);
 
-            $batchSize = 20;
-            $i = 0;
-            foreach (json_decode($products) as $apiBeer) {
-                $beer = $this->entityManager->getRepository(Beer::class)->findOneBy(['name' => $apiBeer->name]);
+            if(!$beer) {
+                $beer = $this->entityManager->getRepository(Beer::class)->createNewBeer($apiBeer);
+                $this->entityManager->persist($beer);
 
-                if(!$beer) {
-                    $beer = $this->entityManager->getRepository(Beer::class)->createNewBeer($apiBeer);
-                    $this->entityManager->persist($beer);
-
-                    if (($i % $batchSize) === 0) {
-                        $this->entityManager->flush();
-                        $this->entityManager->clear();
-                    }
-                    $i++;
-                    $io->text('Added new beer to create: ' . $apiBeer->name);
+                if (($i % $batchSize) === 0) {
+                    $this->entityManager->flush();
+                    $this->entityManager->clear();
                 }
+                $i++;
+                $io->text('Added new beer to create: ' . $apiBeer->name);
             }
-            $this->entityManager->flush();
-            $this->logger->notice('Success with import');
-            $this->logger->info('Added new beers:'. $i);
-
-            $io->success('Success with import.');
-
-        } catch (\GuzzleHttp\Exception\ClientException $exception) {
-            $io->error($exception->getMessage());
-            $this->logger->error($exception->getMessage());
-
-        } catch (\Exception $exception) {
-            $io->error($exception->getMessage());
-            $this->logger->error($exception->getMessage());
         }
+
+        $this->entityManager->flush();
+        $this->logger->notice('Success with import');
+        $this->logger->info('Added new beers:'. $i);
+
+        $io->success('Success with import.');
     }
 }

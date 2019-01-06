@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Brewer;
 use App\Entity\Country;
+use Doctrine\ORM\ORMException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -19,6 +20,13 @@ class BrewerRepository extends BaseRepository
         parent::__construct($registry, Brewer::class);
     }
 
+    /**
+     * @param string $name
+     * @param string $country
+     * @return Brewer
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function findBrewerOrCreateByName(string $name, string $country) : Brewer
     {
         $brewer = $this->findOneBy(['name' => $name]);

@@ -21,6 +21,12 @@ class BeerRepository extends BaseRepository
         parent::__construct($registry, Beer::class);
     }
 
+    /**
+     * @param object $apiBeer
+     * @return Beer
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function createNewBeer(object $apiBeer) : Beer
     {
         $brewer = $this->_em
@@ -39,7 +45,7 @@ class BeerRepository extends BaseRepository
         $beer->setName($apiBeer->name);
         $beer->setSize($apiBeer->size);
         $beer->setPrice($apiBeer->price);
-        $beer->setPricePerLiter($this->calculatePricePerLiter($apiBeer->size, $apiBeer->price));
+        $beer->setPricePerLitre($this->calculatePricePerLitre($apiBeer->size, $apiBeer->price));
         $beer->setImageUrl($apiBeer->image_url);
         $beer->setAbv($apiBeer->abv);
         $beer->setOnSale($apiBeer->on_sale);
@@ -55,7 +61,7 @@ class BeerRepository extends BaseRepository
         return $beer;
     }
 
-    private function calculatePricePerLiter(string $size, float $price) : float
+    private function calculatePricePerLitre(string $size, float $price) : float
     {
         preg_match_all('!\d+!', $size, $matches);
         $amount = (float)$matches[0][0];

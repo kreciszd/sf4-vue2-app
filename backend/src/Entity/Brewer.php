@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Filter\BeersCountOrderFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +16,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BrewerRepository")
  * @ApiResource(
  *     attributes={
- *          "order"={"name":"ASC"},
  *          "pagination_client_items_per_page"=true,
  *          "maximum_items_per_page": 100
  *     },
@@ -33,6 +36,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={
  *         "groups"={"read"}
  *     }
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={"beersCount","name"}
+ * )
+ * @ApiFilter(
+ *     BeersCountOrderFilter::class,
+ *     properties={"beersCount"}
  * )
  */
 class Brewer implements NameFieldInterface
@@ -59,6 +70,7 @@ class Brewer implements NameFieldInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Beer", mappedBy="brewer", orphanRemoval=true)
+     * @ApiSubresource()
      */
     private $beers;
 
@@ -137,6 +149,14 @@ class Brewer implements NameFieldInterface
      */
     public function getBeersCount()
     {
-        return count($this->getBeers());
+        return $this->getBeers()->count();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function setBeersCount()
+    {
+        return $this->beersCount = $this->getBeers()->count();
     }
 }

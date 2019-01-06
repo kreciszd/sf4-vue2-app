@@ -51,7 +51,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ApiFilter(
  *     OrderFilter::class,
- *     properties={"name","brewer","type","country","pricePerLiter","price","type.name","brewer.country.name"}
+ *     properties={"name","brewer.name","type","category.name","pricePerLitre","price","size","type.name","brewer.country.name"}
  * )
  */
 class Beer implements NameFieldInterface
@@ -86,7 +86,7 @@ class Beer implements NameFieldInterface
      * @ORM\Column(type="decimal", precision=10, scale=2)
      * @Groups({"read", "get-beer-all-data"})
      */
-    private $pricePerLiter;
+    private $pricePerLitre;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -186,14 +186,14 @@ class Beer implements NameFieldInterface
         return $this;
     }
 
-    public function getPricePerLiter()
+    public function getPricePerLitre()
     {
-        return $this->pricePerLiter;
+        return $this->pricePerLitre;
     }
 
-    public function setPricePerLiter($pricePerLiter): self
+    public function setPricePerLitre($pricePerLitre): self
     {
-        $this->pricePerLiter = $pricePerLiter;
+        $this->pricePerLitre = $pricePerLitre;
 
         return $this;
     }

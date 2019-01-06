@@ -14,10 +14,11 @@
         a: 1
       }
     },
+    created() {
+
+    },
     methods: {
-
       getText() {
-
         return'dsad';
       }
     },
