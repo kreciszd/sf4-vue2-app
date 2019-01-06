@@ -93,7 +93,9 @@ Data is provided from api. There is server side pagination, filtering and sortin
 
 TODO:
 ---
-Main thing todo is write some tests unfortunately I did not make it in time although I really wanted to
+Main thing todo is write some tests unfortunately I did not make it in time although I really wanted to.
+
+Add also there is needed deploy to production setup
 
 Importer: 
 - Optimize importer queries and working
