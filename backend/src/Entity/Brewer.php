@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Filter\BeersCountOrderFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,12 +39,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+ *          "name":"partial",
+ *          "country.name":"partial"
+ *     }
+ * )
+ * @ApiFilter(
  *     OrderFilter::class,
  *     properties={"beersCount","name"}
  * )
  * @ApiFilter(
  *     BeersCountOrderFilter::class,
  *     properties={"beersCount"}
+ * )
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={"name","country.name"}
  * )
  */
 class Brewer implements NameFieldInterface

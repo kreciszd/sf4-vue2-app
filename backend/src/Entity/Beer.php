@@ -51,7 +51,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ApiFilter(
  *     OrderFilter::class,
- *     properties={"name","brewer.name","type","category.name","pricePerLitre","price","size","type.name","brewer.country.name"}
+ *     properties={"name","brewer.name","type","category.name","pricePerLitre","price","size","type.name","brewer.country.name","onSale"}
  * )
  */
 class Beer implements NameFieldInterface

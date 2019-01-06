@@ -5,7 +5,7 @@ use GuzzleHttp\Client;
 
 class ExternalApiService
 {
-    const BEER_API_URL = 'http://ontariobeerapi2.ca/';
+    const BEER_API_URL = 'http://ontariobeerapi.ca/';
     const COUNTRIES_API_URL =  'https://restcountries.eu/rest/v2/name/';
 
     private $client;
