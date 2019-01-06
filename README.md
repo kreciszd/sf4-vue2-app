@@ -87,7 +87,7 @@ Additionally, documentation has been created automatically.
 
 Front:
 ---
-Frontend applications is SPA done in Vue.js 2 and Vue framework called Vuetify `https://vuetifyjs.com`
+Frontend applications is SPA done in Vue.js 2 and Vue framework called Vuetify https://vuetifyjs.com
 Data is provided from api. There is server side pagination, filtering and sorting.
 
 
