@@ -6,8 +6,8 @@
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
-      label="Country"
-      item-text="name"
+      label="Country Code"
+      item-text="code"
       item-value="id"
       persistent-hint
       prepend-icon="mdi-city"
