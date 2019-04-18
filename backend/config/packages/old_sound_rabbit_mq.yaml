@@ -1,0 +1,19 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            url: '%env(RABBITMQ_URL)%'
+            connection_timeout: 6
+            read_write_timeout: 6
+            lazy: true
+            keepalive: true
+    producers:
+        # use 'old_sound_rabbit_mq.task_producer' service to send data.
+        import_data:
+            connection:       default
+            exchange_options: { name: 'import-data', type: direct }
+    consumers:
+        import_data:
+            connection:       default
+            exchange_options: { name: 'import-data', type: direct }
+            queue_options:    { name: 'import-data'}
+            callback:         App\Consumer\ImportDataConsumer

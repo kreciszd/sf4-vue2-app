@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Beer;
 use App\Service\ExternalApiService;
+use App\Service\ImportBeerDataService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -19,12 +20,18 @@ class ImportBeerDataCommand extends Command
     private $entityManager;
     private $logger;
     private $externalApiService;
+    private $importBeerDataService;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, ExternalApiService $externalApiService)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggerInterface $importerLogger,
+        ExternalApiService $externalApiService,
+        ImportBeerDataService $importBeerDataService
+    ){
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->logger = $importerLogger;
         $this->externalApiService = $externalApiService;
+        $this->importBeerDataService = $importBeerDataService;
 
         parent::__construct();
     }
@@ -43,30 +50,8 @@ class ImportBeerDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $products = $this->externalApiService->importBeers();
-
-        $batchSize = 20;
-        $i = 0;
-        foreach ($products as $apiBeer) {
-            $beer = $this->entityManager->getRepository(Beer::class)->findOneBy(['productId' => $apiBeer->product_id]);
-
-            if(!$beer) {
-                $beer = $this->entityManager->getRepository(Beer::class)->createNewBeer($apiBeer);
-                $this->entityManager->persist($beer);
-
-                if (($i % $batchSize) === 0) {
-                    $this->entityManager->flush();
-                    $this->entityManager->clear();
-                }
-                $i++;
-                $io->text('Added new beer to create: ' . $apiBeer->name);
-            }
-        }
-
-        $this->entityManager->flush();
-        $this->logger->notice('Success with import');
-        $this->logger->info('Added new beers:'. $i);
-
+        $io->text('Start import');
+        $this->importBeerDataService->execute();
         $io->success('Success with import.');
     }
 }

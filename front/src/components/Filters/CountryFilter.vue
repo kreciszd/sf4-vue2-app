@@ -36,7 +36,7 @@
       }
     },
     mounted() {
-      this.getCountriesList();
+      this.getCountriesList()
     },
     methods: {
       getCountriesList() {
