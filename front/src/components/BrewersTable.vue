@@ -1,17 +1,14 @@
 <template>
-  <v-flex
-    xs12
-    mb-5
-  >
+  <v-flex xs12 mb-5>
     <alert-error :message="error.message" v-if="error.show"/>
     <v-card v-else>
       <v-layout row wra>
-      <v-flex xs3>
-        <name-filter :refresh-records="refreshBewers" :search="search"/>
-      </v-flex>
-      <v-flex xs3>
-        <country-filter :refresh-records="refreshBewers" :search="search"/>
-      </v-flex>
+        <v-flex xs3>
+          <name-filter :refresh-records="refreshBrewers" :search="search"/>
+        </v-flex>
+        <v-flex xs3>
+          <country-filter :refresh-records="refreshBrewers" :search="search"/>
+        </v-flex>
       </v-layout>
       <v-data-table
         :headers="headers"
@@ -24,24 +21,37 @@
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.id }}</td>
-          <td class="text-xs-left"><router-link :to="`/?brewer=${props.item.id}`">{{ props.item.name }}</router-link></td>
+          <td class="text-xs-left">
+            <router-link :to="`/?brewer=${props.item.id}`">{{ props.item.name }}</router-link>
+          </td>
           <td class="text-xs-left">{{ props.item.beersCount }}</td>
           <td class="text-xs-left">{{ props.item.country.name }}</td>
         </template>
       </v-data-table>
       <div class="text-xs-right pt-2">
-        <v-btn color="primary" :disabled="pagination.page === 1" @click.prevent="getFirstPage">First Page</v-btn>
-        <v-btn color="primary" :disabled="pagination.page === lastPage" @click.prevent="getLastPage">Last Page</v-btn>
+        <v-btn
+          color="primary"
+          :disabled="pagination.page === 1"
+          @click.prevent="getFirstPage"
+        >First Page
+        </v-btn
+        >
+        <v-btn
+          color="primary"
+          :disabled="pagination.page === lastPage"
+          @click.prevent="getLastPage"
+        >Last Page
+        </v-btn>
       </div>
     </v-card>
   </v-flex>
 </template>
 
 <script>
-  import mixin from '../mixin';
-  import CountryFilter from "./Filters/CountryFilter";
-  import NameFilter from "./Filters/NameFilter";
-  import AlertError from "./AlertError";
+  import mixin from '../mixin'
+  import CountryFilter from './Filters/CountryFilter'
+  import NameFilter from './Filters/NameFilter'
+  import AlertError from './AlertError'
 
   export default {
     components: {CountryFilter, NameFilter, AlertError},
@@ -55,7 +65,7 @@
         message: '',
         show: false
       },
-      rowsPerPageItems: [5,10,25,100],
+      rowsPerPageItems: [5, 10, 25, 100],
       totalBrewers: 0,
       lastPage: 0,
       loading: true,
@@ -66,63 +76,67 @@
       },
       brewers: [],
       headers: [
-        { text: 'Id', value: 'id'},
-        { text: 'Name', value: 'name'},
-        { text: 'Number of beers', value: 'beersCount' },
-        { text: 'Country', value: 'country.name' },
-      ],
+        {text: 'Id', value: 'id'},
+        {text: 'Name', value: 'name'},
+        {text: 'Number of beers', value: 'beersCount'},
+        {text: 'Country', value: 'country.name'}
+      ]
     }),
     watch: {
       pagination: {
-        handler () {
-          this.refreshBewers()
+        handler() {
+          this.refreshBrewers()
         },
         deep: true
       }
     },
     methods: {
-      refreshBewers() {
+      refreshBrewers() {
         let direction = ''
-        if(this.pagination.descending === true) direction = 'desc'
-        if(this.pagination.descending === false) direction = 'asc'
+        if (this.pagination.descending === true) direction = 'desc'
+        if (this.pagination.descending === false) direction = 'asc'
 
-        let url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&order[${this.pagination.sortBy}]=${direction}&name=${this.search.name}&country.id=${this.search.country}`
-        if(this.pagination.sortBy === 'beersCount') {
-          url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${this.pagination.page}&${this.pagination.sortBy}=${direction}&name=${this.search.name}&country.id=${this.search.country}`
+        let url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${
+          this.pagination.page
+          }&order[${this.pagination.sortBy}]=${direction}&name=${
+          this.search.name
+          }&country.id=${this.search.country}`
+
+        if (this.pagination.sortBy === 'beersCount') {
+          url = `api/brewers?itemsPerPage=${this.pagination.rowsPerPage}&page=${
+            this.pagination.page
+            }&${this.pagination.sortBy}=${direction}&name=${
+            this.search.name
+            }&country.id=${this.search.country}`
         }
         this.getBrewersFromApi(url)
       },
       getBrewersFromApi(url) {
         this.loading = true
-        this.$http
-          .get(url)
+        this.$http.get(url)
           .then((response) => {
             this.brewers = response.data['hydra:member']
             this.totalBrewers = response.data['hydra:totalItems']
-            if(response.data['hydra:view']['hydra:last'] !== undefined) {
-              this.lastPage = this.getPageParameters(response.data['hydra:view']['hydra:last'])
-            } else {
-              this.lastPage = 1;
-            }
+            this.lastPage = response.data['hydra:view']['hydra:last'] !== undefined
+              ? this.getPageParameters(response.data['hydra:view']['hydra:last'])
+              : 1
           })
-          .catch(error => {
+          .catch(() => {
             this.error.show = true
             this.error.message = 'Error with server'
           })
-          .finally(()=>{
+          .finally(() => {
             this.loading = false
           })
       },
       getFirstPage() {
         this.pagination.page = 1
-        this.refreshBewers()
+        this.refreshBrewers()
       },
       getLastPage() {
         this.pagination.page = this.lastPage
-        this.refreshBewers()
-      },
-
-    },
+        this.refreshBrewers()
+      }
+    }
   }
 </script>
-

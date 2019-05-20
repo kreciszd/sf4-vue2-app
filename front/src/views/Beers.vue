@@ -1,9 +1,6 @@
 <template>
   <v-container>
-    <v-layout
-      text-xs-center
-      wrap
-    >
+    <v-layout text-xs-center wrap>
       <beers-table />
     </v-layout>
   </v-container>
@@ -15,6 +12,6 @@
   export default {
     components: {
       BeersTable
-    },
+    }
   }
 </script>

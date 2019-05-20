@@ -13,10 +13,7 @@
       prepend-icon="mdi-city"
       :clearable="true"
     >
-      <v-slide-x-reverse-transition
-        slot="append-outer"
-        mode="out-in"
-      >
+      <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
       </v-slide-x-reverse-transition>
     </v-autocomplete>
   </v-card-title>
@@ -28,9 +25,9 @@
       refreshRecords: {},
       search: {}
     },
-    data () {
+    data() {
       return {
-        isEditing: true,
+        isEditing: {type: Boolean, default: false},
         model: null,
         brewers: []
       }
@@ -40,12 +37,10 @@
     },
     methods: {
       getBrewersList() {
-        this.$http
-          .get('api/brewers?itemsPerPage=1000')
-          .then((response) => {
-            this.brewers = response.data['hydra:member']
-          })
+        this.$http.get('api/brewers?itemsPerPage=1000').then((response) => {
+          this.brewers = response.data['hydra:member']
+        })
       }
-    },
+    }
   }
 </script>

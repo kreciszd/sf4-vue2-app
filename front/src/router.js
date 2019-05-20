@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Beer from "./views/Beer";
-import Beers from "./views/Beers";
-import Brewers from "./views/Brewers";
 
 Vue.use(Router)
 
@@ -13,17 +10,17 @@ export default new Router({
     {
       path: '/',
       name: 'beers',
-      component: Beers
+      component: () => import('./views/Beers')
     },
     {
       path: '/brewers',
       name: 'brewers',
-      component: Brewers,
+      component: () => import('./views/Brewers')
     },
     {
       path: '/beer/:id',
       name: 'beer',
-      component: Beer,
+      component: () => import('./views/Beer')
     }
   ]
 })

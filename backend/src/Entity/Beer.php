@@ -55,7 +55,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     properties={"name","brewer.name","type.name","pricePerLitre","price","size","type.name","brewer.country.name","onSale","category.name"}
  * )
  */
-class Beer implements NameFieldInterface
+class Beer extends BaseEntity implements NameFieldInterface
 {
     /**
      * @ORM\Id()

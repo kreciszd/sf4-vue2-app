@@ -2,12 +2,7 @@
   <v-container>
     <v-flex xs12 sm8 offset-sm2>
       <v-card>
-        <v-img
-          :src="beer.imageUrl"
-          alt="ss"
-          class="beer-image"
-          contain
-        ></v-img>
+        <v-img :src="beer.imageUrl" alt="ss" class="beer-image" contain></v-img>
         <v-card-title primary-title>
           <v-flex xs12>
             <v-layout row wra>
@@ -26,12 +21,22 @@
               </v-flex>
             </v-layout>
             <template v-for="(information, i) in informations">
-              <beer-info :information="getInformation(information.data)" :label="information.label" :key="i"/>
+              <beer-info
+                :information="getInformation(information.data)"
+                :label="information.label"
+                :key="i"
+              />
             </template>
             <v-divider class="margin-divider"></v-divider>
             <beer-info :information="beer.brewer.name" label="Brewer"/>
-            <beer-info :information="beer.brewer.country.name" label="Country" />
-            <beer-info :information="beer.brewer.country.code" label="Country Code" />
+            <beer-info
+              :information="beer.brewer.country.name"
+              label="Country"
+            />
+            <beer-info
+              :information="beer.brewer.country.code"
+              label="Country Code"
+            />
             <v-divider class="margin-divider"></v-divider>
             <beer-info :information="beer.category.name" label="Category" />
             <beer-info :information="beer.type.name" label="Type" />
@@ -46,8 +51,7 @@
 </template>
 
 <script>
-
-  import BeerInfo from "../components/BeerInfo";
+  import BeerInfo from '../components/BeerInfo'
 
   export default {
     data: () => ({
@@ -59,6 +63,7 @@
         price: '',
         pricePerLitre: '',
         size: '',
+        imageUrl: '',
         brewer: {
           name: '',
           country: {
@@ -74,12 +79,11 @@
         }
       },
       informations: [
-        {'label': 'Id', 'data': 'id'},
-        {'label': 'Abv', 'data': 'abv'},
-        {'label': 'Price', 'data': 'price'},
-        {'label': 'Price per Litre', 'data': 'pricePerLitre'},
-        {'label': 'Size', 'data': 'size'},
-
+        {label: 'Id', data: 'id'},
+        {label: 'Abv', data: 'abv'},
+        {label: 'Price', data: 'price'},
+        {label: 'Price per Litre', data: 'pricePerLitre'},
+        {label: 'Size', data: 'size'}
       ]
     }),
     components: {
@@ -95,17 +99,18 @@
           .get(`api/beers/${this.$route.params.id}`)
           .then((response) => {
             this.beer = response.data
-          }).finally(()=>{
+          })
+          .finally(() => {
           this.loading = false
         })
       },
-      getInformation: function (fieldName) {
+      getInformation(fieldName) {
         if (this.beer.hasOwnProperty(fieldName)) {
           return this.beer[fieldName]
         }
         return ''
       }
-    },
+    }
   }
 </script>
 
@@ -113,7 +118,8 @@
   .beer-image {
     max-height: 400px;
   }
-  .margin-divider{
+
+  .margin-divider {
     margin-bottom: 20px;
   }
 </style>

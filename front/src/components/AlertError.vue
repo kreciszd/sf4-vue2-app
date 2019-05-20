@@ -1,8 +1,5 @@
 <template>
-  <v-alert
-    :value="true"
-    type="error"
-  >
+  <v-alert :value="true" type="error">
     {{ message }}
   </v-alert>
 </template>

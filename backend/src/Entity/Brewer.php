@@ -59,7 +59,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     properties={"name","country.name", "id"}
  * )
  */
-class Brewer implements NameFieldInterface
+class Brewer extends BaseEntity implements NameFieldInterface
 {
     /**
      * @ORM\Id()

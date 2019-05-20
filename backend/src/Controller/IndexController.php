@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Message\ImportBeerData;
+use Doctrine\ORM\EntityManagerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -13,8 +14,9 @@ class IndexController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index(MessageBusInterface $bus, Producer $importDataProducer)
+    public function index(MessageBusInterface $bus, Producer $importDataProducer, EntityManagerInterface $entity)
     {
+//        $entity->getRepository(Category::class)->findAll();
         $data = ['status' => 'start'];
 
         // Symfony Messenger way

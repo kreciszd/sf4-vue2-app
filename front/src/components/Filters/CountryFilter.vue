@@ -13,10 +13,7 @@
       prepend-icon="mdi-city"
       :clearable="true"
     >
-      <v-slide-x-reverse-transition
-        slot="append-outer"
-        mode="out-in"
-      >
+      <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
       </v-slide-x-reverse-transition>
     </v-autocomplete>
   </v-card-title>
@@ -28,7 +25,7 @@
       refreshRecords: {},
       search: {}
     },
-    data () {
+    data() {
       return {
         isEditing: true,
         model: null,
@@ -44,9 +41,10 @@
           .get('api/countries')
           .then((response) => {
             this.countries = response.data['hydra:member']
-          }).finally(()=>{
         })
+          .finally(() => {
+          })
       }
-    },
+    }
   }
 </script>

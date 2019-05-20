@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import './plugins/vuetify'
-import App from './App.vue'
-import router from './router'
 import Vuetify from 'vuetify'
 import axios from 'axios'
+import App from './App.vue'
+import router from './router'
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
-Vue.use(Vuetify);
+Vue.use(Vuetify)
 
 const base = axios.create({
-  baseURL: 'http://app.beer',
+  baseURL: 'http://api.app.beer'
 })
 
 Vue.prototype.$http = base
