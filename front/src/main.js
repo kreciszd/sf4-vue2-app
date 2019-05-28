@@ -1,21 +1,24 @@
 import Vue from 'vue'
+import './plugins/axios'
 import './plugins/vuetify'
-import Vuetify from 'vuetify'
 import axios from 'axios'
 import App from './App.vue'
-import router from './router'
+import router from './router/index'
+import store from './store'
 
 Vue.config.productionTip = false
 
-Vue.use(Vuetify)
+axios.defaults.baseURL = 'http://api.app.beer'
+axios.defaults.headers = {
+  'Content-Type': 'application/ld+json',
+  'Accept': 'application/ld+json'
+}
 
-const base = axios.create({
-  baseURL: 'http://api.app.beer'
-})
-
-Vue.prototype.$http = base
+// Vue.prototype.$axios = $axios
+// store.$axios = $axios
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

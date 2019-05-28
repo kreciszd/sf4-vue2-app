@@ -9,16 +9,16 @@
   </v-layout>
 </template>
 <script>
-  export default {
-    name: 'beer-info',
-    props: {
-      information: {
-        default: ''
-      },
-      label: {
-        type: String,
-        default: ''
-      }
+export default {
+  name: 'beer-info',
+  props: {
+    information: {
+      default: ''
+    },
+    label: {
+      type: String,
+      default: ''
     }
   }
+}
 </script>

@@ -2,7 +2,7 @@
   <v-card-title>
     <v-autocomplete
       v-model="search.brewer"
-      :items="brewers"
+      :items="getBrewersList"
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
@@ -19,28 +19,28 @@
   </v-card-title>
 </template>
 <script>
+  import {mapActions, mapGetters} from 'vuex'
+
   export default {
-    name: 'brewer-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    },
-    data() {
-      return {
-        isEditing: {type: Boolean, default: false},
-        model: null,
-        brewers: []
-      }
-    },
-    mounted() {
-      this.getBrewersList()
-    },
-    methods: {
-      getBrewersList() {
-        this.$http.get('api/brewers?itemsPerPage=1000').then((response) => {
-          this.brewers = response.data['hydra:member']
-        })
-      }
+  name: 'brewer-filter',
+  props: {
+    refreshRecords: {},
+    search: {}
+  },
+  data () {
+    return {
+      isEditing: { type: Boolean, default: false },
+      model: null
     }
+  },
+  computed: {
+    ...mapGetters('filters', ['getBrewersList'])
+  },
+  mounted () {
+    this.loadBrewersList()
+  },
+  methods: {
+    ...mapActions('filters', ['loadBrewersList'])
   }
+}
 </script>

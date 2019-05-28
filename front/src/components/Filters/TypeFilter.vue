@@ -2,7 +2,7 @@
   <v-card-title>
     <v-autocomplete
       v-model="search.type"
-      :items="types"
+      :items="getTypesList"
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
@@ -19,31 +19,27 @@
   </v-card-title>
 </template>
 <script>
+  import {mapActions, mapGetters} from 'vuex'
+
   export default {
-    name: 'type-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    },
-    data() {
-      return {
-        isEditing: true,
-        types: []
-      }
-    },
-    mounted() {
-      this.getTypesList()
-    },
-    methods: {
-      getTypesList() {
-        this.$http
-          .get('api/types')
-          .then((response) => {
-            this.types = response.data['hydra:member']
-        })
-          .finally(() => {
-          })
-      }
+  name: 'type-filter',
+  props: {
+    refreshRecords: {},
+    search: {}
+  },
+  data () {
+    return {
+      isEditing: true
     }
+  },
+  computed: {
+    ...mapGetters('filters', ['getTypesList'])
+  },
+  mounted () {
+    this.loadTypesList()
+  },
+  methods: {
+    ...mapActions('filters', ['loadTypesList'])
   }
+}
 </script>

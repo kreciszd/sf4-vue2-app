@@ -2,7 +2,7 @@
   <v-card-title>
     <v-autocomplete
       v-model="search.country"
-      :items="countries"
+      :items="getCountriesList"
       :readonly="!isEditing"
       @change="refreshRecords"
       :deletable-chips="true"
@@ -19,32 +19,28 @@
   </v-card-title>
 </template>
 <script>
+  import {mapActions, mapGetters} from 'vuex'
+
   export default {
-    name: 'brewer-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    },
-    data() {
-      return {
-        isEditing: true,
-        model: null,
-        countries: []
-      }
-    },
-    mounted() {
-      this.getCountriesList()
-    },
-    methods: {
-      getCountriesList() {
-        this.$http
-          .get('api/countries')
-          .then((response) => {
-            this.countries = response.data['hydra:member']
-        })
-          .finally(() => {
-          })
-      }
+  name: 'brewer-filter',
+  props: {
+    refreshRecords: {},
+    search: {}
+  },
+  data () {
+    return {
+      isEditing: true,
+      model: null
     }
+  },
+  computed: {
+    ...mapGetters('filters', ['getCountriesList'])
+  },
+  mounted () {
+    this.loadCountriesList()
+  },
+  methods: {
+    ...mapActions('filters', ['loadCountriesList'])
   }
+}
 </script>

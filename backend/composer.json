@@ -75,6 +75,7 @@
         }
     },
   "require-dev": {
-    "symfony/test-pack": "^1.0"
+        "api-platform/schema-generator": "^2.1",
+        "symfony/test-pack": "^1.0"
     }
 }

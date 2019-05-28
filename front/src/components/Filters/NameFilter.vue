@@ -11,11 +11,11 @@
   </v-card-title>
 </template>
 <script>
-  export default {
-    name: 'name-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    }
+export default {
+  name: 'name-filter',
+  props: {
+    refreshRecords: {},
+    search: {}
   }
+}
 </script>

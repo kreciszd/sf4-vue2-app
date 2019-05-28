@@ -10,17 +10,17 @@ export default new Router({
     {
       path: '/',
       name: 'beers',
-      component: () => import('./views/Beers')
+      component: () => import(/* webpackChunkName: "beers" */'../views/Beers')
     },
     {
       path: '/brewers',
       name: 'brewers',
-      component: () => import('./views/Brewers')
+      component: () => import(/* webpackChunkName: "brewers" */ '../views/Brewers')
     },
     {
       path: '/beer/:id',
       name: 'beer',
-      component: () => import('./views/Beer')
+      component: () => import(/* webpackChunkName: "beer" */ '../views/Beer')
     }
   ]
 })

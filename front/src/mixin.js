@@ -1,6 +1,6 @@
 export default {
   methods: {
-    getPageParameters(url) {
+    getPageParameters (url) {
       const uri = url.split('?')
       const getVars = {}
 
@@ -14,6 +14,11 @@ export default {
       }
 
       return Number(getVars.page)
+    },
+    buildQueryString (query) {
+      return Object.keys(query)
+        .map(k => (k) + '=' + (query[k]))
+        .join('&')
     }
   }
 }

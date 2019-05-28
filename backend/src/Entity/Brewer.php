@@ -61,6 +61,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Brewer extends BaseEntity implements NameFieldInterface
 {
+    //TODO Move serializer groups to separate file
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

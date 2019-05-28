@@ -10,8 +10,8 @@
   import BrewersTable from '../components/BrewersTable'
 
   export default {
-    components: {
-      BrewersTable
-    }
+  components: {
+    BrewersTable
   }
+}
 </script>

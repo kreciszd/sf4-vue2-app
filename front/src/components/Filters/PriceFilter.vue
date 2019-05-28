@@ -29,11 +29,11 @@
   </v-layout>
 </template>
 <script>
-  export default {
-    name: 'price-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    }
+export default {
+  name: 'price-filter',
+  props: {
+    refreshRecords: {},
+    search: {}
   }
+}
 </script>

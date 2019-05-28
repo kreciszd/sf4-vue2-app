@@ -2,7 +2,7 @@
   <v-container>
     <v-flex xs12 sm8 offset-sm2>
       <v-card>
-        <v-img :src="beer.imageUrl" alt="ss" class="beer-image" contain></v-img>
+        <v-img :src="beer.imageUrl" @error="imageLoadOnError" alt="ss" class="beer-image" contain></v-img>
         <v-card-title primary-title>
           <v-flex xs12>
             <v-layout row wra>
@@ -54,64 +54,65 @@
   import BeerInfo from '../components/BeerInfo'
 
   export default {
-    data: () => ({
-      beer: {
-        onSale: false,
-        image: '',
+  data: () => ({
+    beer: {
+      onSale: false,
+      image: '',
+      name: '',
+      abv: '',
+      price: '',
+      pricePerLitre: '',
+      size: '',
+      imageUrl: '',
+      brewer: {
         name: '',
-        abv: '',
-        price: '',
-        pricePerLitre: '',
-        size: '',
-        imageUrl: '',
-        brewer: {
+        country: {
           name: '',
-          country: {
-            name: '',
-            code: ''
-          }
-        },
-        type: {
-          name: ''
-        },
-        category: {
-          name: ''
+          code: ''
         }
       },
-      informations: [
-        {label: 'Id', data: 'id'},
-        {label: 'Abv', data: 'abv'},
-        {label: 'Price', data: 'price'},
-        {label: 'Price per Litre', data: 'pricePerLitre'},
-        {label: 'Size', data: 'size'}
-      ]
-    }),
-    components: {
-      BeerInfo
+      type: {
+        name: ''
+      },
+      category: {
+        name: ''
+      }
     },
-    activated() {
-      this.getBeer()
+    informations: [
+      { label: 'Id', data: 'id' },
+      { label: 'Abv', data: 'abv' },
+      { label: 'Price', data: 'price' },
+      { label: 'Price per Litre', data: 'pricePerLitre' },
+      { label: 'Size', data: 'size' }
+    ]
+  }),
+  components: {
+    BeerInfo
+  },
+  activated () {
+    this.getBeer()
+  },
+  methods: {
+    imageLoadOnError () {
+      this.beer.image = 'http://denrakaev.com/wp-content/uploads/2015/03/no-image.png'
     },
-    methods: {
-      getBeer() {
-        this.loading = true
-        this.$http
-          .get(`api/beers/${this.$route.params.id}`)
-          .then((response) => {
-            this.beer = response.data
-          })
-          .finally(() => {
+    getBeer () {
+      this.loading = true
+      this.$axios
+        .get(`api/beers/${this.$route.params.id}`).then((response) => {
+          this.beer = response.data
+        }).finally(() => {
           this.loading = false
         })
-      },
-      getInformation(fieldName) {
-        if (this.beer.hasOwnProperty(fieldName)) {
-          return this.beer[fieldName]
-        }
-        return ''
+    },
+    getInformation (fieldName) {
+      if (this.beer.hasOwnProperty(fieldName)) {
+        return this.beer[fieldName]
       }
+      return ''
     }
   }
+}
 </script>
 
 <style scoped>

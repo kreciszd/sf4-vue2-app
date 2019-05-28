@@ -4,10 +4,10 @@
   </v-alert>
 </template>
 <script>
-  export default {
-    name: 'alert-error',
-    props: {
-      message: {}
-    }
+export default {
+  name: 'alert-error',
+  props: {
+    message: {}
   }
+}
 </script>
