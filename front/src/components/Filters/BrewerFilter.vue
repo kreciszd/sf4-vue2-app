@@ -4,7 +4,7 @@
       v-model="search.brewer"
       :items="getBrewersList"
       :readonly="!isEditing"
-      @change="refreshRecords"
+      @change="$emit('refreshRecords')"
       :deletable-chips="true"
       label="Brewer"
       item-text="name"
@@ -24,8 +24,7 @@
   export default {
   name: 'brewer-filter',
   props: {
-    refreshRecords: {},
-    search: {}
+    search: Object
   },
   data () {
     return {

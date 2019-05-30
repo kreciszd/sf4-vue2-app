@@ -5,7 +5,7 @@
         <v-text-field
           type="number"
           v-model="search.priceFrom"
-          @input="refreshRecords"
+          @input="$emit('refreshRecords')"
           append-icon="keyboard_arrow_up"
           label="Price from"
           hide-details
@@ -17,7 +17,7 @@
       <v-card-title>
         <v-text-field
           v-model="search.priceTo"
-          @input="refreshRecords"
+          @input="$emit('refreshRecords')"
           append-icon="keyboard_arrow_down"
           label="Price to"
           hide-details
@@ -32,8 +32,7 @@
 export default {
   name: 'price-filter',
   props: {
-    refreshRecords: {},
-    search: {}
+    search: Object
   }
 }
 </script>

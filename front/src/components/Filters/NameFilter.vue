@@ -2,9 +2,9 @@
   <v-card-title>
     <v-text-field
       v-model="search.name"
-      @input="refreshRecords"
+      @input="$emit('refreshRecords')"
       append-icon="search"
-      label="Beer name"
+      :label="label"
       hide-details
       :clearable="true"
     ></v-text-field>
@@ -14,8 +14,11 @@
 export default {
   name: 'name-filter',
   props: {
-    refreshRecords: {},
-    search: {}
+    search: Object,
+    label: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

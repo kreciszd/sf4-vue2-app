@@ -4,7 +4,7 @@
       v-model="search.country"
       :items="getCountriesList"
       :readonly="!isEditing"
-      @change="refreshRecords"
+      @change="$emit('refreshRecords')"
       :deletable-chips="true"
       label="Country Code"
       item-text="code"
@@ -24,8 +24,7 @@
   export default {
   name: 'brewer-filter',
   props: {
-    refreshRecords: {},
-    search: {}
+    search: Object
   },
   data () {
     return {

@@ -4,10 +4,10 @@
     <v-card v-else>
       <v-layout row wra>
         <v-flex xs3>
-          <name-filter :refresh-records="buildQuery" :search="search"/>
+          <name-filter @refreshRecords="buildQuery" :label="'Brewer Name'" :search="search"/>
         </v-flex>
         <v-flex xs3>
-          <country-filter :refresh-records="buildQuery" :search="search"/>
+          <country-filter @refreshRecords="buildQuery" :search="search"/>
         </v-flex>
       </v-layout>
       <v-data-table
@@ -51,7 +51,7 @@
   import CountryFilter from './Filters/CountryFilter'
   import NameFilter from './Filters/NameFilter'
   import AlertError from './AlertError'
-  import {mapActions, mapGetters, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import PaginationButton from './PaginationButton'
 
   export default {
@@ -87,12 +87,15 @@
       handler () {
         this.buildQuery()
       },
-      deep: true
+      deep: false
     }
   },
   computed: {
-    ...mapGetters('brewers', []),
-    ...mapState('brewers', ['brewers', 'totalBrewers', 'lastPage'])
+    ...mapGetters('brewers', {
+      brewers: 'getBrewers',
+      totalBrewers: 'getTotalBrewers',
+      lastPage: 'getLastPage'
+    })
   },
   methods: {
     ...mapActions('brewers', ['loadBrewers']),

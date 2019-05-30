@@ -4,19 +4,19 @@
     <v-card v-else>
       <v-layout row wrap>
         <v-flex xs3>
-          <name-filter :refresh-records="buildQuery" :search="search"/>
+          <name-filter @refreshRecords="buildQuery" :label="'Beer Name'" :search="search"/>
         </v-flex>
         <v-flex xs3>
-          <country-filter :refresh-records="buildQuery" :search="search"/>
+          <country-filter @refreshRecords="buildQuery" :search="search"/>
         </v-flex>
         <v-flex xs3>
-          <brewer-filter :refresh-records="buildQuery" :search="search"/>
+          <brewer-filter @refreshRecords="buildQuery" :search="search"/>
         </v-flex>
         <v-flex xs3>
-          <type-filter :refresh-records="buildQuery" :search="search"/>
+          <type-filter @refreshRecords="buildQuery" :search="search"/>
         </v-flex>
       </v-layout>
-      <price-filter :refresh-records="buildQuery" :search="search"/>
+      <price-filter @refreshRecords="buildQuery" :search="search"/>
       <v-data-table
         :headers="headers"
         :items="beers"
@@ -69,9 +69,10 @@
   import NameFilter from './Filters/NameFilter'
   import BrewerFilter from './Filters/BrewerFilter'
   import TypeFilter from './Filters/TypeFilter'
+  // TODO Change this filter
   import PriceFilter from './Filters/PriceFilter'
   import AlertError from './AlertError'
-  import {mapActions, mapGetters, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import PaginationButton from './PaginationButton'
 
   export default {
@@ -125,11 +126,14 @@
         this.buildQuery()
       },
       deep: true
-    },
+    }
   },
   computed: {
-    ...mapGetters('beers', []),
-    ...mapState('beers', ['beers', 'totalBeers', 'lastPage'])
+    ...mapGetters('beers', {
+      beers: 'getBeers',
+      totalBeers: 'getTotalBeers',
+      lastPage: 'getLastPage'
+    })
   },
   activated () {
     if (this.$route.query.brewer) {
@@ -141,12 +145,9 @@
   methods: {
     ...mapActions('beers', ['loadBeers']),
     clearSearch () {
-      this.search.name = ''
-      this.search.country = ''
-      this.search.brewer = ''
-      this.search.priceFrom = ''
-      this.search.priceTo = ''
-      this.search.type = ''
+      Object.keys(this.search).forEach((key) => {
+        this.search[key] = ''
+      })
     },
     buildQuery () {
       let query = []

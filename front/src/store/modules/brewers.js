@@ -10,8 +10,14 @@ const state = {
 
 // GETTERS
 const getters = {
-  totalBrewers: (state, getters, rootState, rootGetters) => {
+  getBrewers: (state) => {
+    return state.brewers
+  },
+  getTotalBrewers: (state) => {
     return state.totalBrewers
+  },
+  getLastPage: (state) => {
+    return state.lastPage
   }
 }
 

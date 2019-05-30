@@ -4,7 +4,7 @@
       v-model="search.type"
       :items="getTypesList"
       :readonly="!isEditing"
-      @change="refreshRecords"
+      @change="$emit('refreshRecords')"
       :deletable-chips="true"
       label="Type"
       item-text="name"
@@ -24,8 +24,7 @@
   export default {
   name: 'type-filter',
   props: {
-    refreshRecords: {},
-    search: {}
+    search: Object
   },
   data () {
     return {
