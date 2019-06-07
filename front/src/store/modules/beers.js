@@ -36,16 +36,11 @@ const mutations = {
 
 // ACTIONS
 const actions = {
-  loadBeers ({ commit }, urlParams) {
-    return new Promise((resolve, reject) => {
-      Api.fetchBeers(urlParams).then(response => {
-        commit('SET_BEERS', response.data['hydra:member'])
-        commit('SET_TOTAL_BEERS', response.data['hydra:totalItems'])
-        commit('SET_LAST_PAGE', response.data['hydra:view']['hydra:last'])
-        resolve()
-      }).catch(e => {
-        reject(e)
-      })
+  async loadBeers ({ commit }, urlParams) {
+    await Api.fetchBeers(urlParams).then(response => {
+      commit('SET_BEERS', response.data['hydra:member'])
+      commit('SET_TOTAL_BEERS', response.data['hydra:totalItems'])
+      commit('SET_LAST_PAGE', response.data['hydra:view']['hydra:last'])
     })
   }
 }

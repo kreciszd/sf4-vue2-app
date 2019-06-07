@@ -10,6 +10,7 @@
   import BrewersTable from '../components/BrewersTable'
 
   export default {
+  name: 'PageBrewers',
   components: {
     BrewersTable
   }

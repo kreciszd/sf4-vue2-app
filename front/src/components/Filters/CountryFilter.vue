@@ -1,45 +1,52 @@
 <template>
   <v-card-title>
     <v-autocomplete
-      v-model="search.country"
+      v-model="model"
       :items="getCountriesList"
-      :readonly="!isEditing"
-      @change="$emit('refreshRecords')"
+      @change="$emit('refreshRecords', model)"
       :deletable-chips="true"
       label="Country Code"
       item-text="code"
+      color="purple"
       item-value="id"
       persistent-hint
+      :loading="loading"
+      :error="error"
+      :disabled="error"
+      :error-messages="errorMessage"
       prepend-icon="mdi-city"
-      :clearable="true"
-    >
+      :light="true"
+      :clearable="true">
       <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
       </v-slide-x-reverse-transition>
     </v-autocomplete>
   </v-card-title>
 </template>
+
 <script>
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapGetters} from 'vuex'
 
   export default {
-  name: 'brewer-filter',
-  props: {
-    search: Object
-  },
+  name: 'BrewerFilter',
   data () {
     return {
-      isEditing: true,
-      model: null
+      model: null,
+      loading: 'secondary',
+      error: false,
+      errorMessage: null
     }
   },
   computed: {
     ...mapGetters('filters', ['getCountriesList'])
   },
   mounted () {
-    this.loadCountriesList()
-  },
-  methods: {
-    ...mapActions('filters', ['loadCountriesList'])
+    this.$store.dispatch('filters/loadCountriesList').then(() => {
+      this.loading = false
+      this.error = false
+    }).catch(() => {
+      this.error = true
+      this.errorMessage = 'Server Error'
+    })
   }
 }
 </script>

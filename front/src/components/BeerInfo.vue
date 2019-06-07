@@ -8,17 +8,14 @@
     </v-flex>
   </v-layout>
 </template>
+
 <script>
+// TODO make this with slots
 export default {
-  name: 'beer-info',
+  name: 'BeerInfo',
   props: {
-    information: {
-      default: ''
-    },
-    label: {
-      type: String,
-      default: ''
-    }
+    information: { type: String, default: '' },
+    label: { type: String, default: '' }
   }
 }
 </script>

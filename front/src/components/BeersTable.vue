@@ -4,19 +4,32 @@
     <v-card v-else>
       <v-layout row wrap>
         <v-flex xs3>
-          <name-filter @refreshRecords="buildQuery" :label="'Beer Name'" :search="search"/>
+          <name-filter
+            @refreshRecords="buildQuery('name', $event)" :label="'Beer Name'"/>
         </v-flex>
         <v-flex xs3>
-          <country-filter @refreshRecords="buildQuery" :search="search"/>
+          <country-filter @refreshRecords="buildQuery('country', $event)"/>
         </v-flex>
         <v-flex xs3>
-          <brewer-filter @refreshRecords="buildQuery" :search="search"/>
+          <brewer-filter @refreshRecords="buildQuery('brewer', $event)"/>
         </v-flex>
         <v-flex xs3>
-          <type-filter @refreshRecords="buildQuery" :search="search"/>
+          <type-filter @refreshRecords="buildQuery('type', $event)"/>
+        </v-flex>
+        <v-flex xs3>
+          <price-filter
+            @refreshRecords="buildQuery('priceFrom', $event)"
+            label="Price from"
+          />
+        </v-flex>
+        <v-flex xs3>
+          <price-filter
+            @refreshRecords="buildQuery('priceTo', $event)"
+            label="Price to"
+            icon="keyboard_arrow_down"
+          />
         </v-flex>
       </v-layout>
-      <price-filter @refreshRecords="buildQuery" :search="search"/>
       <v-data-table
         :headers="headers"
         :items="beers"
@@ -47,13 +60,13 @@
       </v-data-table>
       <div class="text-xs-right pt-2">
         <pagination-button
-          @setPage="pagination.page = $event"
+          @setPage="setPage"
           :page="pagination.page"
           :target-page="1"
           :text="'First Page'"
         />
         <pagination-button
-          @setPage="pagination.page = $event"
+          @setPage="setPage"
           :page="pagination.page"
           :target-page="lastPage"
           :text="'Last Page'"
@@ -69,13 +82,13 @@
   import NameFilter from './Filters/NameFilter'
   import BrewerFilter from './Filters/BrewerFilter'
   import TypeFilter from './Filters/TypeFilter'
-  // TODO Change this filter
   import PriceFilter from './Filters/PriceFilter'
   import AlertError from './AlertError'
   import {mapActions, mapGetters} from 'vuex'
   import PaginationButton from './PaginationButton'
 
   export default {
+  name: 'BeersTable',
   components: {
     PaginationButton,
     AlertError,
@@ -124,8 +137,7 @@
     pagination: {
       handler () {
         this.buildQuery()
-      },
-      deep: true
+      }
     }
   },
   computed: {
@@ -149,7 +161,9 @@
         this.search[key] = ''
       })
     },
-    buildQuery () {
+    buildQuery (prop, value) {
+      this.search[prop] = value
+
       let query = []
       query['itemsPerPage'] = this.pagination.rowsPerPage
       query['page'] = this.pagination.page
@@ -175,6 +189,10 @@
         this.error.show = true
         this.error.message = 'Error with server'
       })
+    },
+    setPage (page) {
+      this.pagination.page = page
+      this.buildQuery()
     }
   }
 }

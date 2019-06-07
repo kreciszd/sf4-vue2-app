@@ -7,7 +7,9 @@
     {{ text }}
   </v-btn>
 </template>
+
 <script>
+// TODO Make this by slots
 export default {
   name: 'pagination-button',
   props: {

@@ -4,10 +4,10 @@
     <v-card v-else>
       <v-layout row wra>
         <v-flex xs3>
-          <name-filter @refreshRecords="buildQuery" :label="'Brewer Name'" :search="search"/>
+          <name-filter @refreshRecords="buildQuery('name', $event)" label="Brewer Name"/>
         </v-flex>
         <v-flex xs3>
-          <country-filter @refreshRecords="buildQuery" :search="search"/>
+          <country-filter @refreshRecords="buildQuery('country', $event)"/>
         </v-flex>
       </v-layout>
       <v-data-table
@@ -30,13 +30,13 @@
       </v-data-table>
       <div class="text-xs-right pt-2">
         <pagination-button
-          @setPage="pagination.page = $event"
+          @setPage="setPage"
           :page="pagination.page"
           :target-page="1"
           :text="'First Page'"
         />
         <pagination-button
-          @setPage="pagination.page = $event"
+          @setPage="setPage"
           :page="pagination.page"
           :target-page="lastPage"
           :text="'Last Page'"
@@ -55,6 +55,7 @@
   import PaginationButton from './PaginationButton'
 
   export default {
+  name: 'BrewersTable',
   components: { CountryFilter, NameFilter, AlertError, PaginationButton },
   mixins: [mixin],
   data: () => ({
@@ -99,7 +100,9 @@
   },
   methods: {
     ...mapActions('brewers', ['loadBrewers']),
-    buildQuery () {
+    buildQuery (prop, value) {
+      this.search[prop] = value
+
       let query = []
       query['itemsPerPage'] = this.pagination.rowsPerPage
       query['page'] = this.pagination.page
@@ -121,6 +124,10 @@
         this.error.show = true
         this.error.message = 'Error with server'
       })
+    },
+    setPage (page) {
+      this.pagination.page = page
+      this.buildQuery()
     }
   }
 }

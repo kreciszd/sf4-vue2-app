@@ -23,10 +23,8 @@ class ConsoleEventsSubscriber implements EventSubscriberInterface
         ]);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return [
-           'console.error' => 'onConsoleError',
-        ];
+        return ['console.error' => 'onConsoleError'];
     }
 }

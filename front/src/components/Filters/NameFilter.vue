@@ -1,8 +1,8 @@
 <template>
   <v-card-title>
     <v-text-field
-      v-model="search.name"
-      @input="$emit('refreshRecords')"
+      v-model="name"
+      @input="$emit('refreshRecords', name)"
       append-icon="search"
       :label="label"
       hide-details
@@ -10,15 +10,15 @@
     ></v-text-field>
   </v-card-title>
 </template>
+
 <script>
 export default {
-  name: 'name-filter',
+  name: 'NameFilter',
   props: {
-    search: Object,
-    label: {
-      type: String,
-      default: ''
-    }
-  }
+    label: { type: String, default: '' }
+  },
+  data: () => ({
+    name: null
+  })
 }
 </script>

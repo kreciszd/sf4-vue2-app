@@ -1,45 +1,52 @@
 <template>
   <v-card-title>
     <v-autocomplete
-      v-model="search.brewer"
+      v-model="brewer"
       :items="getBrewersList"
-      :readonly="!isEditing"
-      @change="$emit('refreshRecords')"
+      @change="$emit('refreshRecords', brewer)"
       :deletable-chips="true"
       label="Brewer"
       item-text="name"
       item-value="id"
+      color="purple"
       persistent-hint
+      :loading="loading"
+      :error="error"
+      :disabled="error"
+      :error-messages="errorMessage"
       prepend-icon="mdi-city"
-      :clearable="true"
-    >
+      :light="true"
+      :clearable="true">
       <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
       </v-slide-x-reverse-transition>
     </v-autocomplete>
   </v-card-title>
 </template>
+
 <script>
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapGetters} from 'vuex'
 
   export default {
-  name: 'brewer-filter',
-  props: {
-    search: Object
-  },
+  name: 'BrewerFilter',
   data () {
     return {
-      isEditing: { type: Boolean, default: false },
-      model: null
+      brewer: null,
+      loading: 'secondary',
+      error: false,
+      errorMessage: null
     }
   },
   computed: {
     ...mapGetters('filters', ['getBrewersList'])
   },
   mounted () {
-    this.loadBrewersList()
-  },
-  methods: {
-    ...mapActions('filters', ['loadBrewersList'])
+    this.$store.dispatch('filters/loadBrewersList').then(() => {
+      this.loading = false
+      this.error = false
+    }).catch(() => {
+      this.error = true
+      this.errorMessage = 'Server Error'
+    })
   }
 }
 </script>

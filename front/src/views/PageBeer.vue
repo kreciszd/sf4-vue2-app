@@ -2,7 +2,7 @@
   <v-container>
     <v-flex xs12 sm8 offset-sm2>
       <v-card>
-        <v-img :src="beer.imageUrl" @error="imageLoadOnError" alt="ss" class="beer-image" contain></v-img>
+        <v-img :src="beer.imageUrl" alt="" class="beer-image" contain></v-img>
         <v-card-title primary-title>
           <v-flex xs12>
             <v-layout row wra>
@@ -20,23 +20,13 @@
                 <v-icon v-else color="red">remove_circle</v-icon>
               </v-flex>
             </v-layout>
-            <template v-for="(information, i) in informations">
-              <beer-info
-                :information="getInformation(information.data)"
-                :label="information.label"
-                :key="i"
-              />
+            <template v-for="(info, i) in infos">
+              <beer-info :information="getInformation(info.data)" :label="info.label" :key="i"/>
             </template>
             <v-divider class="margin-divider"></v-divider>
             <beer-info :information="beer.brewer.name" label="Brewer"/>
-            <beer-info
-              :information="beer.brewer.country.name"
-              label="Country"
-            />
-            <beer-info
-              :information="beer.brewer.country.code"
-              label="Country Code"
-            />
+            <beer-info :information="beer.brewer.country.name" label="Country"/>
+            <beer-info :information="beer.brewer.country.code" label="Country Code"/>
             <v-divider class="margin-divider"></v-divider>
             <beer-info :information="beer.category.name" label="Category" />
             <beer-info :information="beer.type.name" label="Type" />
@@ -52,33 +42,13 @@
 
 <script>
   import BeerInfo from '../components/BeerInfo'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
+  name: 'PageBeer',
+  components: { BeerInfo },
   data: () => ({
-    beer: {
-      onSale: false,
-      image: '',
-      name: '',
-      abv: '',
-      price: '',
-      pricePerLitre: '',
-      size: '',
-      imageUrl: '',
-      brewer: {
-        name: '',
-        country: {
-          name: '',
-          code: ''
-        }
-      },
-      type: {
-        name: ''
-      },
-      category: {
-        name: ''
-      }
-    },
-    informations: [
+    infos: [
       { label: 'Id', data: 'id' },
       { label: 'Abv', data: 'abv' },
       { label: 'Price', data: 'price' },
@@ -86,25 +56,14 @@
       { label: 'Size', data: 'size' }
     ]
   }),
-  components: {
-    BeerInfo
+  computed: {
+    ...mapGetters('beer', { beer: 'getBeer' })
   },
   activated () {
-    this.getBeer()
+    this.loadBeer(this.$route.params.id)
   },
   methods: {
-    imageLoadOnError () {
-      this.beer.image = 'http://denrakaev.com/wp-content/uploads/2015/03/no-image.png'
-    },
-    getBeer () {
-      this.loading = true
-      this.$axios
-        .get(`api/beers/${this.$route.params.id}`).then((response) => {
-          this.beer = response.data
-        }).finally(() => {
-          this.loading = false
-        })
-    },
+    ...mapActions('beer', ['loadBeer']),
     getInformation (fieldName) {
       if (this.beer.hasOwnProperty(fieldName)) {
         return this.beer[fieldName]

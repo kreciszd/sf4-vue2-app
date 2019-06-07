@@ -3,11 +3,12 @@
     {{ message }}
   </v-alert>
 </template>
+
 <script>
 export default {
-  name: 'alert-error',
+  name: 'AlertError',
   props: {
-    message: {}
+    message: { type: String, default: null }
   }
 }
 </script>

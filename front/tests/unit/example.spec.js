@@ -1,12 +1,26 @@
-import {shallowMount} from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import {createLocalVue, mount} from '@vue/test-utils'
+import VueRouter from 'vue-router'
+import PageBeers from '../../src/views/PageBeers'
+import Vuetify from 'vuetify'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
+describe('PageBeers', () => {
+  beforeEach(() => {
+    const localVue = createLocalVue()
+    localVue.use(VueRouter)
+    localVue.use(Vuetify)
+
+    const routes = [{ path: '/', component: PageBeers }]
+    const router = new VueRouter({
+      routes
     })
-    expect(wrapper.text()).toMatch(msg)
+
+    const wrapper = mount(PageBeers, {
+      localVue,
+      router
+    })
+  })
+
+  it('renders props.msg when passed', () => {
+
   })
 })
