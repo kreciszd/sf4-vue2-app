@@ -41,10 +41,10 @@
 </template>
 
 <script>
-  import BeerInfo from '../components/BeerInfo'
-  import {mapActions, mapGetters} from 'vuex'
+import BeerInfo from '../components/BeerInfo'
+import { mapActions, mapGetters } from 'vuex'
 
-  export default {
+export default {
   name: 'PageBeer',
   components: { BeerInfo },
   data: () => ({

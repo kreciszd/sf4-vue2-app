@@ -41,14 +41,14 @@
 </template>
 
 <script>
-  import mixin from '../mixin'
-  import CountryFilter from './Filters/CountryFilter'
-  import NameFilter from './Filters/NameFilter'
-  import AlertError from './AlertError'
-  import {mapActions, mapGetters} from 'vuex'
-  import PaginationButton from './PaginationButton'
+import mixin from '../mixin'
+import CountryFilter from './Filters/CountryFilter'
+import NameFilter from './Filters/NameFilter'
+import AlertError from './AlertError'
+import { mapActions, mapGetters } from 'vuex'
+import PaginationButton from './PaginationButton'
 
-  export default {
+export default {
   name: 'BrewersTable',
   components: { CountryFilter, NameFilter, AlertError, PaginationButton },
   mixins: [mixin],

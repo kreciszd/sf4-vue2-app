@@ -71,17 +71,17 @@
 </template>
 
 <script>
-  import mixin from '../mixin'
-  import CountryFilter from './Filters/CountryFilter'
-  import NameFilter from './Filters/NameFilter'
-  import BrewerFilter from './Filters/BrewerFilter'
-  import TypeFilter from './Filters/TypeFilter'
-  import PriceFilter from './Filters/PriceFilter'
-  import AlertError from './AlertError'
-  import {mapActions, mapGetters} from 'vuex'
-  import PaginationButton from './PaginationButton'
+import mixin from '../mixin'
+import CountryFilter from './Filters/CountryFilter'
+import NameFilter from './Filters/NameFilter'
+import BrewerFilter from './Filters/BrewerFilter'
+import TypeFilter from './Filters/TypeFilter'
+import PriceFilter from './Filters/PriceFilter'
+import AlertError from './AlertError'
+import { mapActions, mapGetters } from 'vuex'
+import PaginationButton from './PaginationButton'
 
-  export default {
+export default {
   name: 'BeersTable',
   components: {
     PaginationButton,

@@ -7,9 +7,9 @@
 </template>
 
 <script>
-  import BeersTable from '../components/BeersTable'
+import BeersTable from '../components/BeersTable'
 
-  export default {
+export default {
   name: 'PageBeers',
   components: {
     BeersTable

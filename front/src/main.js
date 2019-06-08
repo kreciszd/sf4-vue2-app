@@ -14,9 +14,6 @@ axios.defaults.headers = {
   'Accept': 'application/ld+json'
 }
 
-// Vue.prototype.$axios = $axios
-// store.$axios = $axios
-
 new Vue({
   router,
   store,
