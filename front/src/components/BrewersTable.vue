@@ -29,18 +29,12 @@
         </template>
       </v-data-table>
       <div class="text-xs-right pt-2">
-        <pagination-button
-          @setPage="setPage"
-          :page="pagination.page"
-          :target-page="1"
-          :text="'First Page'"
-        />
-        <pagination-button
-          @setPage="setPage"
-          :page="pagination.page"
-          :target-page="lastPage"
-          :text="'Last Page'"
-        />
+        <pagination-button @setPage="setPage" :page="pagination.page" :target-page="1">
+          First Page
+        </pagination-button>
+        <pagination-button @setPage="setPage" :page="pagination.page" :target-page="lastPage">
+          Last page
+        </pagination-button>
       </div>
     </v-card>
   </v-flex>

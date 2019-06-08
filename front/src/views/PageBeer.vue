@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-flex xs12 sm8 offset-sm2>
+    <v-flex xs12 sm8 offset-sm2 v-if="loaded">
       <v-card>
         <v-img :src="beer.imageUrl" alt="" class="beer-image" contain></v-img>
         <v-card-title primary-title>
@@ -21,15 +21,15 @@
               </v-flex>
             </v-layout>
             <template v-for="(info, i) in infos">
-              <beer-info :information="getInformation(info.data)" :label="info.label" :key="i"/>
+              <beer-info :label="info.label" :key="i">{{ getInformation(info.data) }}</beer-info>
             </template>
             <v-divider class="margin-divider"></v-divider>
-            <beer-info :information="beer.brewer.name" label="Brewer"/>
-            <beer-info :information="beer.brewer.country.name" label="Country"/>
-            <beer-info :information="beer.brewer.country.code" label="Country Code"/>
+            <beer-info label="Brewer">{{ beer.brewer.name }}</beer-info>
+            <beer-info label="Country">{{ beer.brewer.country.name }}</beer-info>
+            <beer-info label="Country Code">{{ beer.brewer.country.code }}</beer-info>
             <v-divider class="margin-divider"></v-divider>
-            <beer-info :information="beer.category.name" label="Category" />
-            <beer-info :information="beer.type.name" label="Type" />
+            <beer-info label="Category">{{ beer.category.name }}</beer-info>
+            <beer-info label="Type">{{ beer.type.name }}</beer-info>
           </v-flex>
         </v-card-title>
         <v-card-actions class="text-lg-right">
@@ -54,13 +54,19 @@
       { label: 'Price', data: 'price' },
       { label: 'Price per Litre', data: 'pricePerLitre' },
       { label: 'Size', data: 'size' }
-    ]
+    ],
+    loaded: false
   }),
   computed: {
     ...mapGetters('beer', { beer: 'getBeer' })
   },
   activated () {
-    this.loadBeer(this.$route.params.id)
+    this.loaded = false
+    this.loadBeer(this.$route.params.id).then(() => {
+      this.loaded = true
+    }).catch(() => {
+      this.loaded = false
+    })
   },
   methods: {
     ...mapActions('beer', ['loadBeer']),
