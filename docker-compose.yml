@@ -11,7 +11,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   backend:
-    image: thecodingmachine/php:7.2-v2-apache-node10
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
     labels:
       - traefik.enable=true
       - traefik.backend=app
@@ -21,6 +23,7 @@ services:
     environment:
       APACHE_DOCUMENT_ROOT: public/
       DATABASE_URL: mysql://db_user:db_password@mysql:3306/db_name
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     volumes:
       - ./backend:/var/www/html:rw
 
@@ -59,7 +62,23 @@ services:
       HOST: 0.0.0.0
     depends_on:
       - backend
-volumes:
 
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+    volumes:
+      - ./docker/rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+
+volumes:
   mysql_data:
     driver: local

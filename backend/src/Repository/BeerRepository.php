@@ -33,10 +33,12 @@ class BeerRepository extends BaseRepository
             ->getRepository(Brewer::class)
             ->findBrewerOrCreateByName($apiBeer->brewer, $apiBeer->country);
 
+        /** @var Category $category */
         $category = $this->_em
             ->getRepository(Category::class)
             ->findOneOrCreateByName($apiBeer->category);
 
+        /** @var Type $type */
         $type = $this->_em
             ->getRepository(Type::class)
             ->findOneOrCreateByName($apiBeer->type);

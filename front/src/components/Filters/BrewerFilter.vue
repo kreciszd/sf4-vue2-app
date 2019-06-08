@@ -36,7 +36,7 @@
       }
     },
     mounted() {
-      this.getBrewersList();
+      this.getBrewersList()
     },
     methods: {
       getBrewersList() {
@@ -44,8 +44,7 @@
           .get('api/brewers?itemsPerPage=1000')
           .then((response) => {
             this.brewers = response.data['hydra:member']
-          }).finally(()=>{
-        })
+          })
       }
     },
   }

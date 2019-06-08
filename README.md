@@ -112,3 +112,11 @@ Opportunities to expand:
 - Add custom CRUD operations
 - Authentication
 - Add this to frontend
+
+
+Queue:
+---
+Symfony messenger:
+bin/console messenger:consume-messages amqp
+
+RabbitMQBundle

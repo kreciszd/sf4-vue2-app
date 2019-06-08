@@ -10,9 +10,9 @@ class ConsoleEventsSubscriber implements EventSubscriberInterface
 {
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $importerLogger)
     {
-        $this->logger = $logger;
+        $this->logger = $importerLogger;
     }
 
     public function onConsoleError(ConsoleErrorEvent $event)

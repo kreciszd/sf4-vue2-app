@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-flex xs12 sm8 offset-sm2>
-
       <v-card>
         <v-img
           :src="beer.imageUrl"
@@ -11,7 +10,7 @@
         ></v-img>
         <v-card-title primary-title>
           <v-flex xs12>
-            <v-layout row wra >
+            <v-layout row wra>
               <v-flex xs12>
                 <h1 class="headline mb-0 text-sm-center">{{ beer.name }}</h1>
               </v-flex>
