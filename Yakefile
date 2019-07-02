@@ -1,0 +1,11 @@
+up: docker-compose up -d --force-recreate
+build: docker-compose build
+bash: docker-compose exec php bash
+console: docker-compose exec php bin/console $CMD
+composer: docker-compose exec php composer $CMD
+phpunit: docker-compose exec php bin/phpunit $CMD
+
+yarn: docker-compose exec front yarn $CMD
+vue: docker-compose exec front vue $CMD
+npm: docker-compose exec front npm $CMD
+front: docker-compose exec front bash

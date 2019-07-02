@@ -6,6 +6,7 @@ use App\Entity\Beer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class ImportBeerDataService
@@ -27,15 +28,14 @@ class ImportBeerDataService
      */
     public function execute()
     {
-        $id = uniqid();
+        $id = uniqid('', true);
         try {
             $products = $this->externalApiService->importBeers();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
 
         $this->logger->notice('Start import: '. $id);
-        $batchSize = 20;
         $i = 0;
         foreach ($products as $apiBeer) {
             $beer = $this->entityManager->getRepository(Beer::class)->findOneBy(['productId' => $apiBeer->product_id]);
@@ -44,7 +44,7 @@ class ImportBeerDataService
                 $beer = $this->entityManager->getRepository(Beer::class)->createNewBeer($apiBeer);
                 $this->entityManager->persist($beer);
 
-                if (($i % $batchSize) === 0) {
+                if (($i % 20) === 0) {
                     $this->entityManager->flush();
                     $this->entityManager->clear();
                 }

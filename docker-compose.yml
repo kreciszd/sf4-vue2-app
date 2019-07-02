@@ -1,26 +1,26 @@
-version: '3'
+version: '3.4'
 
 services:
-
   traefik:
     image: traefik:1.7
-    command: --docker --docker.exposedbydefault=false
+    command: --api --docker --docker.domain=app.beer
     ports:
-      - "80:80"
+      - 80:80
+      - 8081:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  backend:
-    build:
-      context: ./
-      dockerfile: ./docker/php/Dockerfile
+  php:
+    build: ./docker/php
     labels:
       - traefik.enable=true
       - traefik.backend=app
-      - traefik.frontend.rule=Host:app.beer
+      - traefik.frontend.rule=Host:api.app.beer
     env_file:
       - ./backend/.env
     environment:
+      PHP_EXTENSION_XDEBUG: 1
+      PHP_MEMORY_LIMIT: 1G
       APACHE_DOCUMENT_ROOT: public/
       DATABASE_URL: mysql://db_user:db_password@mysql:3306/db_name
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
@@ -43,7 +43,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.backend=phpmyadmin
-      - traefik.frontend.rule=Host:phpadmin.app.beer
+      - traefik.frontend.rule=Host:${PHPMYADMIN_VHOST}
     environment:
       PMA_HOST: mysql
       PMA_USER: db_user
@@ -52,32 +52,42 @@ services:
   front:
     build:
       context: ./front
-      dockerfile: ./Dockerfile
+      dockerfile: ../docker/front/Dockerfile
+    #    expose:
+    #      - 8080
     ports:
-      - "8080:8080"
+      - ${FRONT_PORT}:8080
+    #    labels:
+    #      - traefik.enable=true
+    #      - traefik.backend=front
+    #      - traefik.frontend.rule=Host:app.beer
+    #      - traefik.port=8080
     command: sh -c "npm install && npm run serve"
     volumes:
-      - "./front:/app"
+      - ./front:/app
     environment:
       HOST: 0.0.0.0
     depends_on:
-      - backend
+      - php
 
   rabbitmq:
-    image: "rabbitmq:3-management"
-    hostname: "rabbit"
+    image: rabbitmq:3-management
+    hostname: rabbit
     environment:
-      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
-      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - 15672:15672
+      - 5672:5672
     labels:
-      NAME: "rabbitmq"
-    volumes:
-      - ./docker/rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+      - traefik.enable=true
+      - traefik.backend=rabbitmq
+      - traefik.frontend.rule=Host:${RABBITMQ_VHOST}
+      - NAME=rabbitmq
+#    volumes:
+#      - ./docker/rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
 
 volumes:
   mysql_data:

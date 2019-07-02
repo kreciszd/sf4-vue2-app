@@ -18,4 +18,5 @@ return [
     Enqueue\Bundle\EnqueueBundle::class => ['all' => true],
     Enqueue\MessengerAdapter\Bundle\EnqueueAdapterBundle::class => ['all' => true],
     OldSound\RabbitMqBundle\OldSoundRabbitMqBundle::class => ['all' => true],
+    Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
 ];

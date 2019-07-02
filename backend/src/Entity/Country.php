@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     collectionOperations={"GET"}
  * )
  */
-class Country implements NameFieldInterface
+class Country extends BaseEntity implements NameFieldInterface
 {
     /**
      * @ORM\Id()

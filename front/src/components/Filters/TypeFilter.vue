@@ -1,52 +1,52 @@
 <template>
   <v-card-title>
     <v-autocomplete
-      v-model="search.type"
-      :items="types"
-      :readonly="!isEditing"
-      @change="refreshRecords"
+      v-model="type"
+      :items="getTypesList"
+      @change="$emit('refreshRecords', type)"
       :deletable-chips="true"
       label="Type"
       item-text="name"
       item-value="id"
+      color="purple"
       persistent-hint
+      :loading="loading"
+      :error="error"
+      :disabled="error"
+      :error-messages="errorMessage"
       prepend-icon="mdi-city"
-      :clearable="true"
-    >
-      <v-slide-x-reverse-transition
-        slot="append-outer"
-        mode="out-in"
-      >
+      :light="true"
+      :clearable="true">
+      <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
       </v-slide-x-reverse-transition>
     </v-autocomplete>
   </v-card-title>
 </template>
+
 <script>
-  export default {
-    name: 'type-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
-    },
-    data () {
-      return {
-        isEditing: true,
-        model: null,
-        types: []
-      }
-    },
-    mounted() {
-      this.getTypesList();
-    },
-    methods: {
-      getTypesList() {
-        this.$http
-          .get('api/types')
-          .then((response) => {
-            this.types = response.data['hydra:member']
-          }).finally(()=>{
-        })
-      }
-    },
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'TypeFilter',
+  data () {
+    return {
+      type: null,
+      loading: 'secondary',
+      error: false,
+      errorMessage: null
+    }
+  },
+  computed: {
+    ...mapGetters('filters', ['getTypesList'])
+  },
+  mounted () {
+    this.$store.dispatch('filters/loadTypesList').then(() => {
+      this.loading = false
+      this.error = false
+    }).catch(() => {
+      this.error = true
+      this.errorMessage = 'Server Error'
+    })
   }
+}
 </script>

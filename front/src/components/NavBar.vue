@@ -10,11 +10,7 @@
 </template>
 
 <script>
-  export default {
-    name: "NavBar"
-  }
+export default {
+  name: 'NavBar'
+}
 </script>
-
-<style scoped>
-
-</style>

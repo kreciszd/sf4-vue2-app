@@ -17,9 +17,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BrewerRepository")
  * @ApiResource(
  *     attributes={
- *          "order"={"id":"ASC"},
+ *          "order"={"name":"ASC"},
  *          "pagination_client_items_per_page"=true,
- *          "maximum_items_per_page": 1000,
+ *          "maximum_items_per_page": 100,
  *     },
  *     itemOperations={
  *         "GET"={
@@ -32,46 +32,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         "GET"={
  *              "normalization_context"={
  *                  "groups"={"get","get-brewer-all-data"}
- *              }
+ *              },
+ *          },
+ *          "get_filters"={
+ *              "method"="GET",
+ *              "path"="/brewers/filters",
+ *              "normalization_context"={"groups"={"get-filters"}},
+ *              "pagination_enabled" = false
  *          }
  *      },
  *     normalizationContext={
  *         "groups"={"read"}
  *     }
  * )
- * @ApiFilter(
- *     SearchFilter::class,
- *     properties={
- *          "name":"partial",
- *          "country.id":"exact"
- *     }
- * )
- * @ApiFilter(
- *     OrderFilter::class,
- *     properties={"beersCount","name"}
- * )
- * @ApiFilter(
- *     BeersCountOrderFilter::class,
- *     properties={"beersCount"}
- * )
- * @ApiFilter(
- *     OrderFilter::class,
- *     properties={"name","country.name", "id"}
- * )
+ * @ApiFilter(SearchFilter::class, properties={"name":"partial","country.id":"exact"})
+ * @ApiFilter(OrderFilter::class, properties={"beersCount","name"})
+ * @ApiFilter(BeersCountOrderFilter::class, properties={"beersCount"})
+ * @ApiFilter(OrderFilter::class,properties={"name","country.name", "id"})
+ *
  */
-class Brewer implements NameFieldInterface
+class Brewer extends BaseEntity implements NameFieldInterface
 {
+    //TODO Move serializer groups to separate file
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get","get-beer-all-data"})
+     * @Groups({"get","get-beer-all-data", "get-filters"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"get","get-beer-all-data"})
+     * @Groups({"get","get-beer-all-data", "get-filters"})
      */
     private $name;
 
@@ -171,5 +164,13 @@ class Brewer implements NameFieldInterface
     public function setBeersCount()
     {
         return $this->beersCount = $this->getBeers()->count();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

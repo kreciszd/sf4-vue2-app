@@ -8,13 +8,14 @@ class ImportBeerData
 
     /**
      * ImportBeerData constructor.
+     * @param array $content
      */
     public function __construct(array $content)
     {
         $this->content = $content;
     }
 
-    public function getContent()
+    public function getContent(): array
     {
         return $this->content;
     }

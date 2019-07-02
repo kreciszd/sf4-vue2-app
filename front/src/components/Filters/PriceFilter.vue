@@ -1,39 +1,32 @@
 <template>
-  <v-layout row wrap>
-    <v-flex xs3>
-      <v-card-title>
-        <v-text-field
-          type="number"
-          v-model="search.priceFrom"
-          @input="refreshRecords"
-          append-icon="keyboard_arrow_up"
-          label="Price from"
-          hide-details
-          :clearable="true"
-        ></v-text-field>
-      </v-card-title>
-    </v-flex>
-    <v-flex xs3>
-      <v-card-title>
-        <v-text-field
-          v-model="search.priceTo"
-          @input="refreshRecords"
-          append-icon="keyboard_arrow_down"
-          label="Price to"
-          hide-details
-          :clearable="true"
-          type="number"
-        ></v-text-field>
-      </v-card-title>
-    </v-flex>
-  </v-layout>
+  <v-card-title>
+    <v-text-field
+      type="number"
+      v-model="price"
+      @input="$emit('refreshRecords', price)"
+      :append-icon="icon"
+      :label="label"
+      hide-details
+      :clearable="true"
+    ></v-text-field>
+  </v-card-title>
 </template>
+
 <script>
-  export default {
-    name: 'price-filter',
-    props: {
-      refreshRecords: {},
-      search: {}
+export default {
+  name: 'PriceFilter',
+  props: {
+    icon: {
+      type: String,
+      default: 'keyboard_arrow_up'
+    },
+    label: {
+      type: String,
+      default: 'Price'
     }
-  }
+  },
+  data: () => ({
+    price: null
+  })
+}
 </script>

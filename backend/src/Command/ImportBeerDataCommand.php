@@ -2,12 +2,9 @@
 
 namespace App\Command;
 
-use App\Entity\Beer;
-use App\Service\ExternalApiService;
 use App\Service\ImportBeerDataService;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,26 +14,21 @@ class ImportBeerDataCommand extends Command
 {
     protected static $defaultName = 'import:beer-data';
 
-    private $entityManager;
-    private $logger;
-    private $externalApiService;
+    /** @var ImportBeerDataService $importBeerDataService */
     private $importBeerDataService;
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $importerLogger,
-        ExternalApiService $externalApiService,
-        ImportBeerDataService $importBeerDataService
-    ){
-        $this->entityManager = $entityManager;
-        $this->logger = $importerLogger;
-        $this->externalApiService = $externalApiService;
+    /**
+     * ImportBeerDataCommand constructor.
+     * @param ImportBeerDataService $importBeerDataService
+     */
+    public function __construct(ImportBeerDataService $importBeerDataService)
+    {
         $this->importBeerDataService = $importBeerDataService;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Import information about beers from external API');
     }
@@ -45,7 +37,7 @@ class ImportBeerDataCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @throws ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
